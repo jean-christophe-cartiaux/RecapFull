@@ -8,7 +8,7 @@ const sqlConfig={
     database:DB_NAME,
     server:'localhost',
     pool:{
-        max10,
+        max:10,
         min:0,
         idleTimeoutMillis:300000
     },
