@@ -1,3 +1,4 @@
+// extraction des variable d'environement
 const {DB_USER,DB_NAME,DB_PSW}=process.env;
 
 /* Config de la connection a la DB */
@@ -8,12 +9,12 @@ const sqlConfig={
     database:DB_NAME,
     server:'localhost',
     pool:{
-        max:10,
-        min:0,
-        idleTimeoutMillis:300000
+        max:10, // nombre mas de connexion
+        min:0, // nombre min de connexion
+        idleTimeoutMillis:300000 // délai d'expiration en miliseconde 300.000 => 5 minutes
     },
     options:{
-        trustServerCertificate: true
+        trustServerCertificate: true // indique si le certificat doit être vérifier ou non lors de la connexion
     }
 }
 module.exports = sqlConfig;

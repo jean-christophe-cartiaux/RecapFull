@@ -1,13 +1,24 @@
+//Importation du module MSSQL => comunication avec le serveur
 const sql=require('mssql');
+// Importation de la configuration de la base de donnée
 const sqlConfig=require('../database');
 
+
+
+// Définition de mon objet clientServices contenant mes différente méthodes
 const clientService={
     getProfil: async ()=> {
         try{
             await sql.connect(sqlConfig);
-            const Result = await sql.query('SELECT * FROM clients')
-            if(result){
-                return result.recordset;
+            const request=new sql.Request();
+            // Ajout d'un paramètre à la requête pour l'email
+            request.input('email',sql.NVarChar,email)
+
+            const result=await request.query('SELECT * FROM clients WHERE email=@email')
+
+            if(result.recordset.length > 0){
+                // Retourne le premier enregistrement trouvé (le profil du client)
+                return result.recordset[0];
             }
         }catch(err){
             console.error(err)
@@ -41,7 +52,7 @@ const clientService={
                 .input('email',sql.NVarChar,email)
                 .input('adresseLivraison',sql.NVarChar,adresseLivraison)
                 .input('hashedPassword',sql.NVarChar,hashedPassword)
-            const result = await request.query(`INSERT INTO clients (nom,prenom,email,adresseLivraison,password)VALUES(@nom,@prenom,@email,@adresseLivraison,@hashedPassword)`)
+            const result = await request.query(`INSERT INTO clients (nom,prenom,email,adresseLivraison,password) VALUES(@nom,@prenom,@email,@adresseLivraison,@hashedPassword)`)
 
             if(result.rowsAffected[0] > 0){
                 return result
