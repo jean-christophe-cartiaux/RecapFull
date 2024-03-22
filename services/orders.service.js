@@ -47,10 +47,10 @@ const orderService={
             throw new Error(err)
         }
     },
-    getOrderById:async(id)=>{
+    getOrderById:async(order_id)=>{
         try{
             await sql.connect(sqlConfig)
-            const result =await sql.query` SELECT * FROM orders WHERE id=${id} `
+            const result =await sql.query` SELECT * FROM orders WHERE order_id=${order_id} `
 
             if(result.recordset.length > 0){
                 return result.recordset[0];
