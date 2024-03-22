@@ -5,11 +5,14 @@ const yup =require('yup');
 const {object}= require('yup');
 
 // définition d'un schéma de validation pour register le Cliente
+
 const registerValidator=object({
     nom:yup.string().min(2).max(50).required(),
     prenom:yup.string().min(2).max(50).required(),
     email:yup.string().min(5).max(100).required(),
-    adressLivraison:yup.string().min(5).max(150).required(),
-    Password:yup.string().min(5).max(100).required(),
+    adresseLivraison:yup.string().min(5).max(150).required(),
+    password:yup.string().min(5).max(100).required(),
+
 })
+
 module.exports = registerValidator

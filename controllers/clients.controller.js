@@ -20,8 +20,10 @@ const clientsController={
             if(result){
                 return res.status(200).json({message:"Le Client à bien éter encoder (～￣▽￣)～ "})
             }
+
         }catch (err){
             console.error(err)
+            console.log('boulet')
                 res.sendStatus(500)
         }
     },
@@ -68,9 +70,18 @@ const clientsController={
     },
     profile:async (req,res)=>{
         try{
+            //const id =req.params.id;  // pour eviter cela on fait la version du bas ⏬⏬⏬⏬⏬
+            const {id}=req.params;
+            const result=await clientsService.getProfil(id);
+            if(result){
+                return res.status(200).json(result)
+            }else{
+                return res.status(404).json({message:`le profil avec l'id ${id} n'existe pas et ou est introuvable `})
+            }
 
         }catch (err){
             console.error(err)
+            res.sendStatus(500)
         }
     }
 }

@@ -9,7 +9,7 @@ const sqlConfig={
     database:DB_NAME,
     server:'localhost',
     pool:{
-        max:10, // nombre mas de connexion
+        max:10, // nombre max de connexion
         min:0, // nombre min de connexion
         idleTimeoutMillis:300000 // délai d'expiration en miliseconde 300.000 => 5 minutes
     },
