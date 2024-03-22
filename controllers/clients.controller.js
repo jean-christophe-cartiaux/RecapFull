@@ -29,15 +29,15 @@ const clientsController={
     },
     login:async (req,res)=>{
         try{
-          const bodyValidated = await registerValidator.validate(req.body);
+          const bodyValidated = await authValidator.validate(req.body);
           const {email,password}=bodyValidated;
           const client=await clientsService.getProfil(email);
 
           if (!client){
-              return res.status(400).json({message:`Le client avec l'email ${email} n'existe pas `,code:400})
+              return res.status(400).json({message:`Le client avec l'email ${email} n'existe pas `})
           }
           if(client.jwt){
-              return res.status(200).redirect('/api/orders');
+              return res.status(200).redirect('/api/client');
 
           }else if (password){
               const isPasswordValid = bcrypt.compareSync(password,client.password);
@@ -50,7 +50,7 @@ const clientsController={
                   email:client.email
               };
               const options ={
-                  expireIn:'2d'
+                  expiresIn:'24h'
               }
               const secret =process.env.JWT_SECRET;
               const token = jwt.sign(payload,secret,options);

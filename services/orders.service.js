@@ -10,7 +10,7 @@ const sqlConfig=require('../database');
 const orderService={
 
     // Méthode asynchrone pour récupérer toutes les commands
-    getAll: async ()=> {
+    getAll: async (req,res)=> {
         try{
             //connection a la db
             await sql.connect(sqlConfig);
@@ -28,20 +28,37 @@ const orderService={
             res.sendStatus(500);
         }
     },
-    create:async()=>{
+    create:async(data)=>{
         try{
+            await sql.connect(sqlConfig);
+            const {clients_id,order_date,detailLivraison}=data;
+            const request=new sql.Request();
+            request
+                .input('clients_id',sql.Int,clients_id)
+                .input('order_date',sql.DateTime,order_date)
+                .input('detailLivraison',sql.NVarChar,detailLivraison);
+            const result=await request.query`INSERT INTO orders (clients_id,order_date,detailLivraison) VALUES(@clients_id,@order_date,@detailLivraison)`
+
+            if(result.rowsAffected[0] >0){
+                return  result
+            }
 
         }catch (err){
-            console.error(err)
-            res.sendstatus(500);
+            throw new Error(err)
         }
     },
-    getOrderById:async()=>{
+    getOrderById:async(id)=>{
         try{
+            await sql.connect(sqlConfig)
+            const result =await sql.query` SELECT * FROM orders WHERE id=${id} `
+
+            if(result.recordset.length > 0){
+                return result.recordset[0];
+            }
 
         }catch (err){
             console.error(err)
-            res.sendstatus(500);
+
         }
     }
 }

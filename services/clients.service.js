@@ -7,7 +7,7 @@ const sqlConfig=require('../database');
 
 // Définition de mon objet clientServices contenant mes différente méthodes
 const clientService={
-    getProfil: async ()=> {
+    getProfil: async (email)=> {
         try{
             await sql.connect(sqlConfig);
             const request=new sql.Request();
