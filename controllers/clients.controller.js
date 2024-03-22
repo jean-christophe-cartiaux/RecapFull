@@ -29,7 +29,37 @@ const clientsController={
         try{
           const bodyValidated = await registerValidator.validate(req.body);
           const {email,password}=bodyValidated;
-          const client=await clientsService.getProfil(email)
+          const client=await clientsService.getProfil(email);
+
+          if (!client){
+              return res.status(400).json({message:`Le client avec l'email ${email} n'existe pas `,code:400})
+          }
+          if(client.jwt){
+              return res.status(200).redirect('/api/orders');
+
+          }else if (password){
+              const isPasswordValid = bcrypt.compareSync(password,client.password);
+              if(!isPasswordValid){
+                  return res.status(401).json({message: `Password Invalide 😱`})
+              }
+              const  id = client.id;
+              const payload ={
+                  clientId:id,
+                  email:client.email
+              };
+              const options ={
+                  expireIn:'2d'
+              }
+              const secret =process.env.JWT_SECRET;
+              const token = jwt.sign(payload,secret,options);
+              const clientJwt=await clientsService.login({token,id})
+              if(clientJwt){
+                  res.setHeader('Autorization',`Bearer ${token}`)
+                  res.status(200).json({token});
+              }else{
+                  res.status(500).json({message:'Erreur lors de l\'ecriture du header \'Autorization\''})
+              }
+          }
 
         }catch (err){
             console.error(err)
